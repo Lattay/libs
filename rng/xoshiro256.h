@@ -8,6 +8,13 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>. */
 
 #include <stdint.h>
 
+/* 03/02/2020
+ * Update by Théo Cavignac
+ * This file have been taken from the official page of xoshiro algorithm and
+ * updated to be formated as a single file header lib and to have a seed
+ * function.
+ */
+
 /* This is xoshiro256+ 1.0, our best and fastest generator for floating-point
    numbers. We suggest to use its upper bits for floating-point
    generation, as it is slightly faster than xoshiro256++/xoshiro256**. It
@@ -23,13 +30,25 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>. */
    a 64-bit seed, we suggest to seed a splitmix64 generator and use its
    output to fill s. */
 
+const uint32_t seed_length = 4;
+uint64_t next(void);
+void seed(uint64_t seed[4]);
+void jump(void);
+void long_jump(void);
 
+#ifdef XOSHIRO_IMPLEMENTATION
 static inline uint64_t rotl(const uint64_t x, int k) {
 	return (x << k) | (x >> (64 - k));
 }
 
-
 static uint64_t s[4];
+
+void seed(uint64_t seed[4]){
+  s[0] = seed[0];
+  s[1] = seed[1];
+  s[2] = seed[2];
+  s[3] = seed[3];
+}
 
 uint64_t next(void) {
 	const uint64_t result = s[0] + s[3];
@@ -60,8 +79,8 @@ void jump(void) {
 	uint64_t s1 = 0;
 	uint64_t s2 = 0;
 	uint64_t s3 = 0;
-	for(int i = 0; i < sizeof JUMP / sizeof *JUMP; i++)
-		for(int b = 0; b < 64; b++) {
+	for(uint32_t i = 0; i < sizeof JUMP / sizeof *JUMP; i++)
+		for(uint32_t b = 0; b < 64; b++) {
 			if (JUMP[i] & UINT64_C(1) << b) {
 				s0 ^= s[0];
 				s1 ^= s[1];
@@ -90,8 +109,8 @@ void long_jump(void) {
 	uint64_t s1 = 0;
 	uint64_t s2 = 0;
 	uint64_t s3 = 0;
-	for(int i = 0; i < sizeof LONG_JUMP / sizeof *LONG_JUMP; i++)
-		for(int b = 0; b < 64; b++) {
+	for(uint32_t i = 0; i < sizeof LONG_JUMP / sizeof *LONG_JUMP; i++)
+		for(uint8_t b = 0; b < 64; b++) {
 			if (LONG_JUMP[i] & UINT64_C(1) << b) {
 				s0 ^= s[0];
 				s1 ^= s[1];
@@ -106,3 +125,4 @@ void long_jump(void) {
 	s[2] = s2;
 	s[3] = s3;
 }
+#endif

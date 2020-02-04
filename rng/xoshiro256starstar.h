@@ -8,6 +8,12 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>. */
 
 #include <stdint.h>
 
+/* 03/02/2020
+ * Update by Théo Cavignac
+ * This file have been taken from the official page of xoshiro algorithm and
+ * updated to be be a single file header lib and to provide a seed function.
+ */
+
 /* This is xoshiro256** 1.0, one of our all-purpose, rock-solid
    generators. It has excellent (sub-ns) speed, a state (256 bits) that is
    large enough for any parallel application, and it passes all tests we
@@ -19,12 +25,25 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>. */
    a 64-bit seed, we suggest to seed a splitmix64 generator and use its
    output to fill s. */
 
+const uint32_t seed_length = 4;
+uint64_t next(void);
+void seed(uint64_t seed[4]);
+void jump(void);
+void long_jump(void);
+
+#ifdef XOSHIRO_IMPLEMENTATION
 static inline uint64_t rotl(const uint64_t x, int k) {
 	return (x << k) | (x >> (64 - k));
 }
 
-
 static uint64_t s[4];
+
+void seed(uint64_t seed[4]){
+  s[0] = seed[0];
+  s[1] = seed[1];
+  s[2] = seed[2];
+  s[3] = seed[3];
+}
 
 uint64_t next(void) {
 	const uint64_t result = rotl(s[1] * 5, 7) * 9;
@@ -102,3 +121,4 @@ void long_jump(void) {
 	s[2] = s2;
 	s[3] = s3;
 }
+#endif
