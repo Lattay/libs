@@ -32,7 +32,7 @@ double frand(){
   return (next() >> 11) * (2.0/(1L << 53)) - 1.0;
 }
 
-void naive_fft(double* signal, double* spectrum){
+void naive_dft(double* signal, double* spectrum){
   for(int i = 0; i < N; i++){
     spectrum[2*i] = 0.0;
     spectrum[2*i+1] = 0.0;
@@ -57,7 +57,7 @@ int main(int argc, char** argv){
     data[i] = frand();
   }
 
-  naive_fft(data, spectrum);
+  naive_dft(data, spectrum);
 
   printf("%d\n", N);
   for(int i = 0; i < N; i++){
