@@ -39,9 +39,9 @@
 #define AVL_FREE(variable) free(variable)
 #include <stdlib.h> /* for malloc() */
 
-typedef int (*avl_comparator_f)(void *key1, void *key2);
+typedef int (*avl_comparator_f)(const void *key1, const void *key2);
 typedef void (*avl_key_destructor_f)(void *key);
-typedef void (*avl_node_visitor_f)(void *key, void *data);
+typedef void (*avl_node_visitor_f)(const void *key, void *data);
 
 typedef struct AvlTreeNode {
   struct AvlTreeNode *left, *right;
@@ -82,6 +82,8 @@ void avl_initialize(AvlTree *tree,
  *                    Applied on each key-value pair before destroying it. Use
  *                    it for your own cleanup of the data.
  *                    visitor should NOT free the key.
+ *                    Use NULL when you don't want the data to be freed.
+ *                    The tree will be freed anyway.
 \*--------------------------------------------------------------------------*/
 void avl_destroy(AvlTree *tree,
     avl_node_visitor_f visitor);
@@ -95,7 +97,7 @@ void avl_destroy(AvlTree *tree,
  *  EFFICIENCY:
  *      O(log(n))
 \*--------------------------------------------------------------------------*/
-void *avl_search(AvlTree *tree, void *key);
+void *avl_search(AvlTree *tree, const void *key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -121,7 +123,7 @@ void *avl_insert(AvlTree *tree, void *key, void *data);
  *  EFFICIENCY:
  *      O(log(n))
 \*--------------------------------------------------------------------------*/
-void *avl_remove(AvlTree *tree, void *key);
+void *avl_remove(AvlTree *tree, const void *key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -141,7 +143,7 @@ int avl_ulongcmp(void *key1, void *key2);
 /*
  * The following is a basic avl_node_visitor_f that free data
  */
-void avl_free_data(void *key, void *data);
+void avl_free_data(const void *key, void *data);
 
 #endif
 
@@ -159,7 +161,7 @@ static void *avl_insert_helper(AvlTree *tree,
     AvlTreeNode **node, void *key, void *data);
 /* recursive removal helper, finds the appropriate node to remove */
 static void *avl_remove_helper(AvlTree *tree,
-    AvlTreeNode **node, void *key);
+    AvlTreeNode **node, const void *key);
 /* recursive removal helper, updates tree depths after node swap */
 static void avl_remove_depth_helper(AvlTreeNode *ptr);
 
@@ -183,7 +185,6 @@ void avl_initialize(AvlTree *tree, avl_comparator_f comparator, avl_key_destruct
 }
 
 void avl_destroy(AvlTree *tree, avl_node_visitor_f visitor) {
-
   avl_destroy_helper(tree, tree->root, visitor);
 }
 
@@ -194,7 +195,9 @@ static void avl_destroy_helper(AvlTree *tree,
     return;
   }
 
-  visitor(node->key, node->data);
+  if(visitor){
+    visitor(node->key, node->data);
+  }
   tree->destructor(node->key);
   avl_destroy_helper(tree, node->left, visitor);
   avl_destroy_helper(tree, node->right, visitor);
@@ -202,7 +205,7 @@ static void avl_destroy_helper(AvlTree *tree,
   AVL_FREE(node);
 }
 
-void *avl_search(AvlTree *tree, void *key) {
+void *avl_search(AvlTree *tree, const void *key) {
   AvlTreeNode *node = tree->root;
   int cmp;
   while(node) {
@@ -267,12 +270,12 @@ static void *avl_insert_helper(AvlTree *tree,
   return ret;
 }
 
-void *avl_remove(AvlTree *tree, void *key) {
+void *avl_remove(AvlTree *tree, const void *key) {
   return avl_remove_helper(tree, &tree->root, key);
 }
 
 static void *avl_remove_helper(AvlTree *tree,
-    AvlTreeNode **node, void *key) {
+    AvlTreeNode **node, const void *key) {
 
   int cmp;
   void *ret;
@@ -354,12 +357,12 @@ static void avl_rebalance(AvlTreeNode **node) {
 
   /* two rotation directions */
   if(delta == 2) {
-    if(avl_balance_factor((*node->left) < 0)) {
+    if(avl_balance_factor((*node)->left) < 0) {
       avl_rotate(&(*node)->left, AVL_LEFT);
     }
     avl_rotate(node, AVL_RIGHT);
   } else if(delta == -2) {
-    if(avl_balance_factor((*node->right) > 0)) {
+    if(avl_balance_factor((*node)->right) > 0) {
       avl_rotate(&(*node)->right, AVL_RIGHT);
     }
     avl_rotate(node, AVL_LEFT);
@@ -452,7 +455,7 @@ int avl_ulongcmp(void *key1, void *key2) {
   }
 }
 
-void avl_free_data(void *key, void *data) {
+void avl_free_data(const void *key, void *data) {
   AVL_FREE(data);
 }
-#endif  // AVL_IMPLEMENTATION
+#endif  /* AVL_IMPLEMENTATION */
