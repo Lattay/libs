@@ -41,6 +41,8 @@ void* q_empty(Queue*);
 #endif
 
 #ifdef Q_IMPLEMENTATION
+
+// Insert data at the begining
 void q_push(Queue* queue, void* data){
   QElem* elem = Q_ALLOC(QElem);
   elem->data = data;
@@ -48,6 +50,7 @@ void q_push(Queue* queue, void* data){
   queue->head = elem;
 }
 
+// Insert data at the end
 void q_unshift(Queue* queue, void* data){
   QElem* elem = Q_ALLOC(QElem);
   elem->data = data;
@@ -60,6 +63,7 @@ void q_unshift(Queue* queue, void* data){
   queue->tip = elem;
 }
 
+// Remove data from the begining and return it
 void* q_shift(Queue* queue){
   if(!queue->head){
     return NULL;
