@@ -9,9 +9,11 @@
  * LCH32: Lattay's Clunky Hash 
  * LCH32 aims at being a reasonable hash algorithm for very short data.
  * As far as tests goes I am pretty happy with it. It seems to keep a
- * consistent collision rate about 0.5% for any given size of data from
+ * consistent collision rate about 0.5% for any given size of random data from
  * 2 bytes to 4096 bytes.
  * It also seem to have a more random distribution than Adler.
+ * Note that Adler is actually pretty bad. CRC32 is way better and is better
+ * than LCH32, but it is also slower.
  * It is inspired by XoShiRo algorithm. */
 
 #include <stdlib.h>

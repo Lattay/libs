@@ -8,6 +8,7 @@
 #define ADLER_32 0
 #define ADLER_32X 1
 #define LCH32 2
+#define CRC32 3
 
 #ifndef USE_RNG
 #define USE_RNG KISS64
@@ -45,6 +46,11 @@
 #if USE_HASH == LCH32
 #define LCH32_IMPLEMENTATION
 #include "../hash/lch32.h"
+#endif
+
+#if USE_HASH == CRC32
+#define CRC32_IMPLEMENTATION
+#include "../hash/crc32.h"
 #endif
 
 #ifndef DATA_LENGTH

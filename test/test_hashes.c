@@ -24,6 +24,11 @@
 #include "../hash/lch32.h"
 #endif
 
+#if USE_HASH == CRC32
+#define CRC32_IMPLEMENTATION
+#include "../hash/crc32.h"
+#endif
+
 const char test_str1[50] = "abdTlhu7_-4e74)]=}+&~!:/;mpbgv  EA@mL.%++''(`09hj";
 const char test_str2[50] = "cbdTlhu7_-4e74)]=}+&~!:/;mpbgv  EA@mL.%++''(`09hj";
 const char test_str3[50] = "abdTlhu7_-4e74)]=}+&~!:/;mpbgv  EA@mL.%++''(`09hk";

@@ -25,13 +25,26 @@ p2=$!
 p3=$!
 ./hash_random_gen > hash4.txt
 
-wait $p1
-wait $p2
-wait $p3
+wait $p1 && wait $p2 && wait $p3
 
-cat hash*.txt > big_hash.txt
-rm hash*.txt
+cat hash*.txt > big_hash.txt && rm hash*.txt
 
+echo "### Random numbers ###"
 python ./find_collisions.py
+echo
+
+gcc ./test_hash_words.c -o hash_words -DUSE_HASH=$use_hash
+
+./hash_words < all_english_words.txt > big_hash.txt
+
+echo "### Upper case words ###"
+python ./find_collisions.py
+echo
+
+tr 'A-Z' 'a-z' < all_english_words.txt | ./hash_words > big_hash.txt
+
+echo "### Lower case words ###"
+python ./find_collisions.py
+echo
 
 rm big_hash.txt

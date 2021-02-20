@@ -13,5 +13,6 @@ A list of interesting and usefull FOSS libraries taken from the web.
 - [xoshiro256\*\*](./rng/xoshiro256starstar.h) fast general purpose generator ([source](http://vigna.di.unimi.it/xorshift/))
 
 ## Hash algorithms
-- [adler_32](./hash/adler_32.h) very fast 32 bit hash algorithm
+- [adler_32](./hash/adler_32.h) very fast 32 bit hash algorithm, pretty bad at randomness and collision
 - [lch32](./hash/lch32.h) my own (clunky) 32bit digest hash algorithm, aimed at very short hashed data
+- [crc32](./hash/crc32.h) a well know, very good hash algorithm

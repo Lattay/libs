@@ -1,5 +1,7 @@
-
+import sys
 filename = 'big_hash.txt'
+
+verbose = '-v' in sys.argv
 
 pairs = {}
 collision = set()
@@ -20,11 +22,20 @@ with open(filename) as f:
             hash_n += 1
 
 collision_n = 0
-for hash_ in collision:
-    print(f"Collision with {hash_}")
-    for data in pairs[hash_]:
-        print("    ", data)
+for hash_ in sorted(collision, key=lambda h: -len(pairs[h])):
+    if verbose:
+        print(f"Collision with {hash_}")
+        for data in pairs[hash_]:
+            print("    ", data)
     collision_n += len(pairs[hash_])
 
 ln = len(collision)
-print(f"Total of {collision_n} colliding data on {data_n} unique messages ({100 * collision_n / data_n:4.3}%), concerning {ln} hashes on {hash_n} unique hashes ({100 * ln / hash_n:4.3}%)")
+
+colrate = 100 * collision_n / data_n
+avg = collision_n / len(collision)
+
+if verbose:
+    print(f"Total of {collision_n} colliding data on {data_n} unique messages ({colrate}%), concerning {ln} hashes on {hash_n} unique hashes ({100 * ln / hash_n:4.3}%)")
+else:
+    print('Colision rate | Number of distinct hashes | Average collision by colliding hash')
+    print(f'{colrate:>12.3}% | {hash_n:>25} | {avg:>35.3}')
