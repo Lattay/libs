@@ -1,33 +1,35 @@
-/*  Written in 2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)
-
-To the extent possible under law, the author has dedicated all copyright
-and related and neighboring rights to this software to the public domain
-worldwide. This software is distributed without any warranty.
-
-See <http://creativecommons.org/publicdomain/zero/1.0/>. */
+/* Written in 2018 by David Blackman and Sebastiano Vigna (vigna@acm.org)
+ *
+ * To the extent possible under law, the author has dedicated all copyright and
+ * related and neighboring rights to this software to the public domain
+ * worldwide. This software is distributed without any warranty.
+ * 
+ * See <http://creativecommons.org/publicdomain/zero/1.0/>.
+ *
+ * This is xoshiro256** 1.0, one of our all-purpose, rock-solid generators. It
+ * has excellent (sub-ns) speed, a state (256 bits) that is large enough for
+ * any parallel application, and it passes all tests we are aware of.
+ *
+ * For generating just floating-point numbers, xoshiro256+ is even faster.
+ *
+ * The state must be seeded so that it is not everywhere zero. If you have a
+ * 64-bit seed, we suggest to seed a splitmix64 generator and use its output to
+ * fill s. 
+ *
+ * Update by Théo Cavignac
+ * This file has been taken from the official page of xoshiro algorithm and
+ * updated to be a single file header lib and to provide a seed function.
+ * A seed64 function has been added to implement the above suggestion from the
+ * original authors */
 
 #include <stdint.h>
 
-/* 03/02/2020
- * Update by Théo Cavignac
- * This file have been taken from the official page of xoshiro algorithm and
- * updated to be be a single file header lib and to provide a seed function.
- */
 
-/* This is xoshiro256** 1.0, one of our all-purpose, rock-solid
-   generators. It has excellent (sub-ns) speed, a state (256 bits) that is
-   large enough for any parallel application, and it passes all tests we
-   are aware of.
-
-   For generating just floating-point numbers, xoshiro256+ is even faster.
-
-   The state must be seeded so that it is not everywhere zero. If you have
-   a 64-bit seed, we suggest to seed a splitmix64 generator and use its
-   output to fill s. */
 
 const uint32_t seed_length = 4;
 uint64_t next(void);
 void seed(uint64_t seed[4]);
+void seed64(uint64_t seed);
 void jump(void);
 void long_jump(void);
 
@@ -43,6 +45,15 @@ void seed(uint64_t seed[4]){
   s[1] = seed[1];
   s[2] = seed[2];
   s[3] = seed[3];
+}
+
+void seed64(uint64_t seed){
+  for(int i = 0; i < 4; ++i){
+    seed += UINT64_C(0x9E3779B97F4A7C15);
+    const uint64_t a = (seed ^ (seed >> 30)) * UINT64_C(0xBF58476D1CE4E5B9);
+    const uint64_t b = (a ^ (a >> 27)) * UINT64_C(0x94D049BB133111EB);
+    s[i] = b ^ (b >> 31);
+  }
 }
 
 uint64_t next(void) {

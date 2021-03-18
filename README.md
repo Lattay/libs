@@ -9,10 +9,15 @@ A list of interesting and usefull FOSS libraries taken from the web.
 
 ## RNG
 
-- [xoshiro256+](./rng/xoshiro256.h) fast floating point generator ([source](http://vigna.di.unimi.it/xorshift/))
-- [xoshiro256\*\*](./rng/xoshiro256starstar.h) fast general purpose generator ([source](http://vigna.di.unimi.it/xorshift/))
+- [splitmix64](./rng/splitmix64.h) very fast RNG, with only 64b state, useful to seed xoshiro256 or when a there is no need for a huge period ([source](https://github.com/svaarala/duktape/blob/master/misc/splitmix64.c))
+- [xoshiro256+](./rng/xoshiro256.h) fast floating point generator with huge period ([source](http://vigna.di.unimi.it/xorshift/))
+- [xoshiro256\*\*](./rng/xoshiro256starstar.h) fast general purpose generator with huge period ([source](http://vigna.di.unimi.it/xorshift/))
+
+## Noise generator
+- [perlin](./rng/perlin.h) Perlin noise generator from 1 to 3D, adapted from a C++ lib ([C++ source](https://github.com/Reputeless/PerlinNoise))
 
 ## Hash algorithms
-- [adler_32](./hash/adler_32.h) very fast 32 bit hash algorithm, pretty bad at randomness and collision
-- [lch32](./hash/lch32.h) my own (clunky) 32bit digest hash algorithm, aimed at very short hashed data
+- 
 - [crc32](./hash/crc32.h) a well know, very good hash algorithm
+- [lch32](./hash/lch32.h) my own (clunky) 32bit digest hash algorithm, aimed at very short hashed data
+- [adler_32](./hash/adler_32.h) very fast 32 bit hash algorithm, pretty bad at randomness and collision

@@ -2,6 +2,8 @@ Some naive tests to evaluate the algorithms.
 `test_*.c` compile to executables that produce textual results
 `*.py` process the results.
 
+I have no clue how to properly test a hash or a RNG, I am just trying things out.
+
 - test\_autocorrel.c produce random values and compute autocorrelation
 - test\_fft.c produce random values and compute (naive) Discrete Fourier Transform
 - test\_points.c

@@ -6,13 +6,18 @@
  * and related and neighboring rights to this software to the public domain
  * worldwide. This software is distributed without any warranty.
  * 
- * See <http://creativecommons.org/publicdomain/zero/1.0/>. */
+ * See <http://creativecommons.org/publicdomain/zero/1.0/>.
+ *
+ * DISCLAIMER: I am not sure the algorithm will actually be good if you use the
+ * seed function. The original algorithm have been written without any input,
+ * and manually seeding it may produce shitty sequences
+ */
 
 #include <stdint.h>
 
-const uint32_t seed_length = 5 * 8;
+const uint32_t seed_length = 8;
 uint64_t next(void);
-void seed(uint64_t seed[5]);
+void seed(uint64_t* seed);
 
 #ifdef KISS64_IMPLEMENTATION
 static uint64_t s[5] = {
@@ -23,18 +28,18 @@ static uint64_t s[5] = {
   12345567890987654321ULL
 };
 
-void seed(uint64_t seed[5]){
-  s[0] = seed[0];
-  s[1] = seed[1];
-  s[2] = seed[2];
-  s[3] = seed[3];
-  s[4] = seed[4];
+void seed(uint64_t* seed){
+  s[0] = seed;
+  s[1] = 362436362436362436ULL;
+  s[2] = 1066149217761810ULL;
+  s[3] = 0;
+  s[4] = 12345567890987654321ULL;
 }
 
 uint64_t next(void) {
   s[3] = (s[0] << 58) + s[4];
   s[4] = (s[0] >> 6);
-  s[0] += s[5];
+  s[0] += s[3];
   s[4] += s[0] < s[3];
 
   s[1] ^= (s[1] << 13);
