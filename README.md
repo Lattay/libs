@@ -1,6 +1,10 @@
 # Libs
 
-A list of interesting and usefull FOSS libraries taken from the web.
+A list of interesting and usefull FOSS libraries taken from the web and often partially rewritten or at least reformatted.
+
+All should fits the single-file header-only format for easy integration in C projects.
+
+Check out the work of the inspirator of this projects: [Sean Barrett](https://github.com/nothings/stb)
 
 ## Data structures
 - [hashtable](./structures/hashtable.h) hashtable implementation ([source](http://www.pomakis.com)) modified to fit the single file header model
