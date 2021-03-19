@@ -52,7 +52,7 @@
 typedef float val_t;
 #define vfloor floorf
 
-void reseed(uint32_t seed);
+void reseed(uint64_t seed);
 
 /* basic noise functions */
 val_t noise_1D(val_t x, uint32_t octaves);
@@ -74,7 +74,7 @@ val_t noise_3D_raw(val_t x, val_t y, val_t z);
 #ifdef PERLIN_IMPL
 
 /* Fast and simple random number generator from 
- * https://github.com/Lattay/libs/bolb/master/rng/splitmix64.h
+ * https://github.com/Lattay/libs/blob/master/rng/splitmix64.h
  *
  * Originally written in 2015 by Sebastiano Vigna (vigna@acm.org) and
  * under CC-0 license.
@@ -84,15 +84,15 @@ val_t noise_3D_raw(val_t x, val_t y, val_t z);
  */
 
 /* RNG state */
-static uint64_t x;
+static uint64_t rng_state;
 
-static inline void seed(uint64_t seed){
-  x = seed;
+static inline void seed(uint64_t s){
+  rng_state = s;
 }
 
 static uint64_t next(void) {
-  x += UINT64_C(0x9E3779B97F4A7C15);
-  const uint64_t a = (x ^ (x >> 30)) * UINT64_C(0xBF58476D1CE4E5B9);
+  rng_state += UINT64_C(0x9E3779B97F4A7C15);
+  const uint64_t a = (rng_state ^ (rng_state >> 30)) * UINT64_C(0xBF58476D1CE4E5B9);
   const uint64_t b = (a ^ (a >> 27)) * UINT64_C(0x94D049BB133111EB);
   return b ^ (b >> 31);
 }
@@ -116,10 +116,10 @@ static inline val_t lerp(val_t t, val_t a, val_t b){
 }
 
 static inline val_t grad(uint8_t hash, val_t x, val_t y, val_t z){
-  const uint8_t h = hash & 15;  /* mask 0b1111 */
+  const uint8_t h = hash & 15;
   const val_t u = h < 8 ? x : y;
   const val_t v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-  return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+  return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
 
 static inline val_t inv_weight(uint32_t octaves){
@@ -144,9 +144,9 @@ static inline int32_t ifloor(val_t f){
 }
 
 /* rebuild the Perlin's table from a 32b seed */
-void reseed(uint64_t seed)
+void reseed(uint64_t s)
 {
-  seed(seed);
+  seed(s);
   for(size_t i = 0; i < 256; ++i){
     p[i] = i;
   }
@@ -158,23 +158,30 @@ void reseed(uint64_t seed)
   }
 }
 
-static val_t noise_3D_raw(val_t x, val_t y, val_t z){
-  const int32_t X = ifloor(x) & 255;
-  const int32_t Y = ifloor(y) & 255;
-  const int32_t Z = ifloor(z) & 255;
+val_t noise_3D_raw(val_t x, val_t y, val_t z){
+  const int fx = floor(x);
+  const int fy = floor(y);
+  const int fz = floor(z);
+  const uint8_t X = fx;
+  const uint8_t Y = fy;
+  const uint8_t Z = fz;
+
+  x -= fx;
+  y -= fy;
+  z -= fz;
 
   /* map x from [-inf, +inf] to [0, 1] by translation
    * then "fade" it to get u */
-  const val_t u = fade(x - floor(x));
-  const val_t v = fade(y - floor(x));
-  const val_t w = fade(z - floor(x));
+  const val_t u = fade(x);
+  const val_t v = fade(y);
+  const val_t w = fade(z);
 
-  const int32_t A = p[X] + Y;
-  const int32_t AA = p[A] + Z;
-  const int32_t AB = p[A + 1] + Z;
-  const int32_t B = p[X + 1] + Y;
-  const int32_t BA = p[B] + Z;
-  const int32_t BB = p[B + 1] + Z;
+  const uint32_t A = p[X] + Y;
+  const uint32_t AA = p[A] + Z;
+  const uint32_t AB = p[A + 1] + Z;
+  const uint32_t B = p[X + 1] + Y;
+  const uint32_t BA = p[B] + Z;
+  const uint32_t BB = p[B + 1] + Z;
 
   return lerp(w,
       lerp(v,
