@@ -52,6 +52,11 @@
 typedef float val_t;
 #define vfloor floorf
 
+typedef uint8_t* perlin_state;
+
+perlin_state new_state(uint64_t seed);
+void free_state(perlin_state s);
+
 void reseed(uint64_t seed);
 
 /* basic noise functions */
@@ -69,6 +74,8 @@ val_t noise_3D_nn(val_t x, val_t y, val_t z, uint32_t octaves);
 val_t noise_1D_raw(val_t x);
 val_t noise_2D_raw(val_t x, val_t y);
 val_t noise_3D_raw(val_t x, val_t y, val_t z);
+
+val_t noise_3D_cstm(val_t x, val_t y, val_t z, perlin_state s);
 
 #endif
 #ifdef PERLIN_IMPL
@@ -102,7 +109,7 @@ static uint64_t next(void) {
  */
 
 /* Perlin table */
-static uint8_t p[512];
+static uint8_t state[512];
 
 static inline val_t fade(val_t t){
   /* Cheap sigmoid (basically a smooth version of round between 0 and 1)
@@ -143,22 +150,39 @@ static inline int32_t ifloor(val_t f){
   return vfloor(f);
 }
 
-/* rebuild the Perlin's table from a 32b seed */
-void reseed(uint64_t s)
-{
-  seed(s);
+static inline void seed_state(uint64_t sd, perlin_state s){
+  seed(sd);
   for(size_t i = 0; i < 256; ++i){
-    p[i] = i;
+    s[i] = i;
   }
 
-  shuffle256(p);
+  shuffle256(s);
 
   for (size_t i = 0; i < 256; ++i){
-    p[256 + i] = p[i];
+    s[256 + i] = s[i];
   }
 }
 
+/* rebuild the Perlin's table from a 32b seed */
+void reseed(uint64_t s) {
+  seed_state(s, state);
+}
+
+perlin_state new_state(uint64_t seed){
+  perlin_state s = malloc(512);
+  seed_state(seed, s);
+  return s;
+}
+
+void free_state(perlin_state s){
+  free(s);
+}
+
 val_t noise_3D_raw(val_t x, val_t y, val_t z){
+  return noise_3D_cstm(x, y, z, state);
+}
+
+val_t noise_3D_cstm(val_t x, val_t y, val_t z, perlin_state s){
   const int fx = floor(x);
   const int fy = floor(y);
   const int fz = floor(z);
@@ -176,21 +200,21 @@ val_t noise_3D_raw(val_t x, val_t y, val_t z){
   const val_t v = fade(y);
   const val_t w = fade(z);
 
-  const uint32_t A = p[X] + Y;
-  const uint32_t AA = p[A] + Z;
-  const uint32_t AB = p[A + 1] + Z;
-  const uint32_t B = p[X + 1] + Y;
-  const uint32_t BA = p[B] + Z;
-  const uint32_t BB = p[B + 1] + Z;
+  const uint32_t A = s[X] + Y;
+  const uint32_t AA = s[A] + Z;
+  const uint32_t AB = s[A + 1] + Z;
+  const uint32_t B = s[X + 1] + Y;
+  const uint32_t BA = s[B] + Z;
+  const uint32_t BB = s[B + 1] + Z;
 
   return lerp(w,
       lerp(v,
-        lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)),
-        lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))
+        lerp(u, grad(s[AA], x, y, z), grad(s[BA], x - 1, y, z)),
+        lerp(u, grad(s[AB], x, y - 1, z), grad(s[BB], x - 1, y - 1, z))
         ),
       lerp(v, 
-        lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)),
-        lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))
+        lerp(u, grad(s[AA + 1], x, y, z - 1), grad(s[BA + 1], x - 1, y, z - 1)),
+        lerp(u, grad(s[AB + 1], x, y - 1, z - 1), grad(s[BB + 1], x - 1, y - 1, z - 1))
         )
       );
 }
@@ -256,4 +280,5 @@ val_t noise_2D(val_t x, val_t y, uint32_t octaves){
 val_t noise_3D(val_t x, val_t y, val_t z, uint32_t octaves){
   return noise_3D_nn(x, y, z, octaves) * inv_weight(octaves);
 }
+
 #endif
