@@ -48,7 +48,7 @@ int txtmat_dump(const char* filename, const int* data, size_t w, size_t h){
   for(size_t y = 0; y < h; ++y){
     for(size_t x = 0; x < w; ++x){
       res = fprintf(f, "%d ", data[x + w * y]);
-      if(res < 0){
+      if(res <= 0){
         return 2;
       }
     }
@@ -68,7 +68,8 @@ int txtmat_load(const char* filename, int** target, size_t* w, size_t* h){
     return 1;
   }
   res = fscanf(f, "DATA %lu %lu\n", w, h);
-  if(res < 0){
+  if(res <= 0){
+    fclose(f);
     return 2;
   }
 
@@ -77,13 +78,15 @@ int txtmat_load(const char* filename, int** target, size_t* w, size_t* h){
   for(size_t y = 0; y < (*h); ++y){
     for(size_t x = 0; x < (*w); ++x){
       res = fscanf(f, "%d ", &data[x + (*w) * y]);
-      if(res < 0){
+      if(res <= 0){
+        fclose(f);
         free(data);
         return 2;
       }
     }
     res = fscanf(f, "\n");
-    if(res < 0){
+    if(res <= 0){
+      fclose(f);
       free(data);
       return 2;
     }
