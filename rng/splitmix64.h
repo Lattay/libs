@@ -30,11 +30,11 @@ uint64_t next();
 
 uint64_t x;
 
-void seed(uint64_t seed){
+void seed(uint64_t seed) {
   x = seed;
 }
 
-uint64_t next(){
+uint64_t next() {
   x += UINT64_C(0x9E3779B97F4A7C15);
   const uint64_t a = (x ^ (x >> 30)) * UINT64_C(0xBF58476D1CE4E5B9);
   const uint64_t b = (a ^ (a >> 27)) * UINT64_C(0x94D049BB133111EB);

@@ -23,27 +23,27 @@
 uint32_t hash(const char* content);
 
 // use a length parameter to determine the length of the buffer
-uint32_t hashn(const uint8_t* content, size_t length);
+uint32_t hashn(const uint8_t * content, size_t length);
 
 #ifdef LCH32_IMPLEMENTATION
 
-static const uint8_t ash_magic[5] = {0x96, 0x47, 0xe2, 0xbc, 0x8d} ;
+static const uint8_t ash_magic[5] = { 0x96, 0x47, 0xe2, 0xbc, 0x8d };
 
 static inline uint32_t rotl(const uint32_t x, int k) {
-	return (x << k) | (x >> (64 - k));
+  return (x << k) | (x >> (64 - k));
 }
 
-uint32_t hash(const char* content){
+uint32_t hash(const char* content) {
   size_t length = 0;
-  while(*(content + length) != 0) length++;
+  while (*(content + length) != 0) length++;
   return hashn(content, length);
 }
 
-uint32_t hashn(const uint8_t* content, size_t length){
-  uint32_t buf[3] = {0x51b73064, 0x9f4a5705, 0x7b049943};
+uint32_t hashn(const uint8_t * content, size_t length) {
+  uint32_t buf[3] = { 0x51b73064, 0x9f4a5705, 0x7b049943 };
   uint32_t digest = 0x698a3c57;
 
-  for(int i = 0; i < length; i+=2){
+  for (int i = 0; i < length; i += 2) {
     uint8_t a = content[i];
     uint8_t b = (i + 1 < length) ? content[i + 1] : content[i % length];
     uint16_t block1 = a | (b << 8);
@@ -58,7 +58,6 @@ uint32_t hashn(const uint8_t* content, size_t length){
     buf[0] ^= digest;
 
     buf[0] ^= t;
-
 
     digest = rotl(digest, 23);
   }

@@ -36,24 +36,24 @@ int txtmat_load(const char* filename, int** data, size_t* w, size_t* h);
 #ifdef TEXT_MAT_IMPL
 #include <stdio.h>
 
-int txtmat_dump(const char* filename, const int* data, size_t w, size_t h){
+int txtmat_dump(const char* filename, const int* data, size_t w, size_t h) {
   FILE* f = fopen(filename, "w");
-  if(!f){
+  if (!f) {
     return 1;
   }
   int res = fprintf(f, "DATA %lu %lu\n", w, h);
-  if(res < 0){
+  if (res < 0) {
     return 2;
   }
-  for(size_t y = 0; y < h; ++y){
-    for(size_t x = 0; x < w; ++x){
+  for (size_t y = 0; y < h; ++y) {
+    for (size_t x = 0; x < w; ++x) {
       res = fprintf(f, "%d ", data[x + w * y]);
-      if(res <= 0){
+      if (res <= 0) {
         return 2;
       }
     }
     res = fprintf(f, "\n");
-    if(res < 0){
+    if (res < 0) {
       return 2;
     }
   }
@@ -61,31 +61,31 @@ int txtmat_dump(const char* filename, const int* data, size_t w, size_t h){
   return res == 0 ? 0 : 3;
 }
 
-int txtmat_load(const char* filename, int** target, size_t* w, size_t* h){
+int txtmat_load(const char* filename, int** target, size_t* w, size_t* h) {
   int res;
   FILE* f = fopen(filename, "r");
-  if(!f){
+  if (!f) {
     return 1;
   }
   res = fscanf(f, "DATA %lu %lu\n", w, h);
-  if(res <= 0){
+  if (res <= 0) {
     fclose(f);
     return 2;
   }
 
   int* data = malloc(sizeof(int) * (*w) * (*h));
 
-  for(size_t y = 0; y < (*h); ++y){
-    for(size_t x = 0; x < (*w); ++x){
+  for (size_t y = 0; y < (*h); ++y) {
+    for (size_t x = 0; x < (*w); ++x) {
       res = fscanf(f, "%d ", &data[x + (*w) * y]);
-      if(res <= 0){
+      if (res <= 0) {
         fclose(f);
         free(data);
         return 2;
       }
     }
     res = fscanf(f, "\n");
-    if(res <= 0){
+    if (res <= 0) {
       fclose(f);
       free(data);
       return 2;

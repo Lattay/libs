@@ -33,17 +33,17 @@ typedef struct {
   QElem* tip;
 } Queue;
 
-void q_push(Queue*, void* data);
-void q_unshift(Queue*, void* data);
-void* q_shift(Queue*);
-void* q_empty(Queue*);
+void q_push(Queue *, void* data);
+void q_unshift(Queue *, void* data);
+void* q_shift(Queue *);
+void* q_empty(Queue *);
 
 #endif
 
 #ifdef Q_IMPLEMENTATION
 
 // Insert data at the begining
-void q_push(Queue* queue, void* data){
+void q_push(Queue * queue, void* data) {
   QElem* elem = Q_ALLOC(QElem);
   elem->data = data;
   elem->next = queue->head;
@@ -51,10 +51,10 @@ void q_push(Queue* queue, void* data){
 }
 
 // Insert data at the end
-void q_unshift(Queue* queue, void* data){
+void q_unshift(Queue * queue, void* data) {
   QElem* elem = Q_ALLOC(QElem);
   elem->data = data;
-  if(!queue->head){
+  if (!queue->head) {
     elem->next = NULL;
     queue->head = elem;
   } else {
@@ -64,8 +64,8 @@ void q_unshift(Queue* queue, void* data){
 }
 
 // Remove data from the begining and return it
-void* q_shift(Queue* queue){
-  if(!queue->head){
+void* q_shift(Queue * queue) {
+  if (!queue->head) {
     return NULL;
   }
   QElem* elem = queue->head;
@@ -75,9 +75,8 @@ void* q_shift(Queue* queue){
   return data;
 }
 
-
-bool q_empty(Queue* queue){
+bool q_empty(Queue * queue) {
   return !queue->head;
 }
 
-#endif  // Q_IMPLEMENTATION
+#endif // Q_IMPLEMENTATION

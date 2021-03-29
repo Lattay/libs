@@ -17,7 +17,7 @@
 
 const uint32_t seed_length = 8;
 uint64_t next(void);
-void seed(uint64_t* seed);
+void seed(uint64_t * seed);
 
 #ifdef KISS64_IMPLEMENTATION
 static uint64_t s[5] = {
@@ -28,7 +28,7 @@ static uint64_t s[5] = {
   12345567890987654321ULL
 };
 
-void seed(uint64_t* seed){
+void seed(uint64_t * seed) {
   s[0] = seed;
   s[1] = 362436362436362436ULL;
   s[2] = 1066149217761810ULL;
@@ -44,7 +44,7 @@ uint64_t next(void) {
 
   s[1] ^= (s[1] << 13);
   s[1] ^= (s[1] >> 17);
-  s[1] ^= (s[1] <<43);
+  s[1] ^= (s[1] << 43);
   s[2] = 6906969069LL * s[2] + 1234567;
 
   return s[0] + s[1] + s[2];
