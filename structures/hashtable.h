@@ -92,7 +92,7 @@ HashTable* ht_create(long numOfBuckets);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_destroy(HashTable * hashTable);
+void ht_destroy(HashTable* hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -111,7 +111,7 @@ void ht_destroy(HashTable * hashTable);
  *                     specified key.
 \*--------------------------------------------------------------------------*/
 
-int ht_contains_key(const HashTable * hashTable, const void* key);
+int ht_contains_key(const HashTable* hashTable, const void* key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -133,7 +133,7 @@ int ht_contains_key(const HashTable * hashTable, const void* key);
  *                     specified value.
 \*--------------------------------------------------------------------------*/
 
-int ht_contains_value(const HashTable * hashTable, const void* value);
+int ht_contains_value(const HashTable* hashTable, const void* value);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -155,7 +155,7 @@ int ht_contains_value(const HashTable * hashTable, const void* value);
  *      err          - 0 if successful, -1 if an error was encountered
 \*--------------------------------------------------------------------------*/
 
-int ht_put(HashTable * hashTable, const void* key, void* value);
+int ht_put(HashTable* hashTable, const void* key, void* value);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -174,7 +174,7 @@ int ht_put(HashTable * hashTable, const void* key, void* value);
  *                     doesn't exist in the HashTable
 \*--------------------------------------------------------------------------*/
 
-void* ht_get(const HashTable * hashTable, const void* key);
+void* ht_get(const HashTable* hashTable, const void* key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -192,7 +192,7 @@ void* ht_get(const HashTable * hashTable, const void* key);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_remove(HashTable * hashTable, const void* key);
+void ht_remove(HashTable* hashTable, const void* key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -208,7 +208,7 @@ void ht_remove(HashTable * hashTable, const void* key);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_remove_all(HashTable * hashTable);
+void ht_remove_all(HashTable* hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -225,7 +225,7 @@ void ht_remove_all(HashTable * hashTable);
  *                     key/value pairs
 \*--------------------------------------------------------------------------*/
 
-int ht_is_empty(const HashTable * hashTable);
+int ht_is_empty(const HashTable* hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -242,7 +242,7 @@ int ht_is_empty(const HashTable * hashTable);
  *                     the specified HashTable
 \*--------------------------------------------------------------------------*/
 
-long ht_size(const HashTable * hashTable);
+long ht_size(const HashTable* hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -260,7 +260,7 @@ long ht_size(const HashTable * hashTable);
  *                     HashTable
 \*--------------------------------------------------------------------------*/
 
-long ht_get_num_buckets(const HashTable * hashTable);
+long ht_get_num_buckets(const HashTable* hashTable);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -281,7 +281,7 @@ long ht_get_num_buckets(const HashTable * hashTable);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_set_key_comparison_function(HashTable * hashTable,
+void ht_set_key_comparison_function(HashTable* hashTable,
                                     int (*keycmp)(const void* key1,
                                                   const void* key2));
 
@@ -304,7 +304,7 @@ void ht_set_key_comparison_function(HashTable * hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_set_value_comparison_function(HashTable * hashTable,
+void ht_set_value_comparison_function(HashTable* hashTable,
                                       int (*valuecmp)(const void* value1,
                                                       const void* value2));
 
@@ -329,7 +329,7 @@ void ht_set_value_comparison_function(HashTable * hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_set_hash_function(HashTable * hashTable,
+void ht_set_hash_function(HashTable* hashTable,
                           unsigned long (*hashFunction)(const void* key));
 
 /*--------------------------------------------------------------------------*\
@@ -358,7 +358,7 @@ void ht_set_hash_function(HashTable * hashTable,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_rehash(HashTable * hashTable, long numOfBuckets);
+void ht_rehash(HashTable* hashTable, long numOfBuckets);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -402,7 +402,7 @@ void ht_rehash(HashTable * hashTable, long numOfBuckets);
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_set_ideal_ratio(HashTable * hashTable, float idealRatio,
+void ht_set_ideal_ratio(HashTable* hashTable, float idealRatio,
                         float lowerRehashThreshold, float upperRehashThreshold);
 
 /*--------------------------------------------------------------------------*\
@@ -433,9 +433,9 @@ void ht_set_ideal_ratio(HashTable * hashTable, float idealRatio,
  *      <nothing>
 \*--------------------------------------------------------------------------*/
 
-void ht_set_deallocation_functions(HashTable * hashTable,
+void ht_set_deallocation_functions(HashTable* hashTable,
                                    void (*keyDeallocator)(void* key),
-                                   void(*valueDeallocator)(void* value));
+                                   void (*valueDeallocator)(void* value));
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -484,7 +484,7 @@ static int isProbablePrime(long oddNumber) {
   return 1; /* maybe */
 }
 
-static long calculateIdealNumOfBuckets(HashTable * hashTable) {
+static long calculateIdealNumOfBuckets(HashTable* hashTable) {
   long idealNumOfBuckets = hashTable->numOfElements / hashTable->idealRatio;
   if (idealNumOfBuckets < 5) {
     idealNumOfBuckets = 5;
@@ -537,7 +537,7 @@ HashTable* ht_create(long numOfBuckets) {
   return hashTable;
 }
 
-void ht_destroy(HashTable * hashTable) {
+void ht_destroy(HashTable* hashTable) {
   int i;
 
   for (i = 0; i < hashTable->numOfBuckets; i++) {
@@ -557,11 +557,11 @@ void ht_destroy(HashTable * hashTable) {
   free(hashTable);
 }
 
-int ht_contains_key(const HashTable * hashTable, const void* key) {
+int ht_contains_key(const HashTable* hashTable, const void* key) {
   return (ht_get(hashTable, key) != NULL);
 }
 
-int ht_contains_value(const HashTable * hashTable, const void* value) {
+int ht_contains_value(const HashTable* hashTable, const void* value) {
   int i;
 
   for (i = 0; i < hashTable->numOfBuckets; i++) {
@@ -576,7 +576,7 @@ int ht_contains_value(const HashTable * hashTable, const void* value) {
   return 0;
 }
 
-int ht_put(HashTable * hashTable, const void* key, void* value) {
+int ht_put(HashTable* hashTable, const void* key, void* value) {
   long hashValue;
   KeyValuePair* pair;
 
@@ -623,7 +623,7 @@ int ht_put(HashTable * hashTable, const void* key, void* value) {
   return 0;
 }
 
-void* ht_get(const HashTable * hashTable, const void* key) {
+void* ht_get(const HashTable* hashTable, const void* key) {
   long hashValue = hashTable->hashFunction(key) % hashTable->numOfBuckets;
   KeyValuePair* pair = hashTable->bucketArray[hashValue];
 
@@ -633,7 +633,7 @@ void* ht_get(const HashTable * hashTable, const void* key) {
   return (pair == NULL) ? NULL : pair->value;
 }
 
-void ht_remove(HashTable * hashTable, const void* key) {
+void ht_remove(HashTable* hashTable, const void* key) {
   long hashValue = hashTable->hashFunction(key) % hashTable->numOfBuckets;
   KeyValuePair* pair = hashTable->bucketArray[hashValue];
   KeyValuePair* previousPair = NULL;
@@ -667,7 +667,7 @@ void ht_remove(HashTable * hashTable, const void* key) {
   }
 }
 
-void ht_remove_all(HashTable * hashTable) {
+void ht_remove_all(HashTable* hashTable) {
   int i;
 
   for (i = 0; i < hashTable->numOfBuckets; i++) {
@@ -688,39 +688,39 @@ void ht_remove_all(HashTable * hashTable) {
   ht_rehash(hashTable, 5);
 }
 
-int ht_is_empty(const HashTable * hashTable) {
+int ht_is_empty(const HashTable* hashTable) {
   return (hashTable->numOfElements == 0);
 }
 
-long ht_size(const HashTable * hashTable) {
+long ht_size(const HashTable* hashTable) {
   return hashTable->numOfElements;
 }
 
-long ht_get_num_buckets(const HashTable * hashTable) {
+long ht_get_num_buckets(const HashTable* hashTable) {
   return hashTable->numOfBuckets;
 }
 
-void ht_set_key_comparison_function(HashTable * hashTable,
+void ht_set_key_comparison_function(HashTable* hashTable,
                                     int (*keycmp)(const void* key1,
                                                   const void* key2)) {
   assert(keycmp != NULL);
   hashTable->keycmp = keycmp;
 }
 
-void ht_set_value_comparison_function(HashTable * hashTable,
+void ht_set_value_comparison_function(HashTable* hashTable,
                                       int (*valuecmp)(const void* value1,
                                                       const void* value2)) {
   assert(valuecmp != NULL);
   hashTable->valuecmp = valuecmp;
 }
 
-void ht_set_hash_function(HashTable * hashTable,
+void ht_set_hash_function(HashTable* hashTable,
                           unsigned long (*hashFunction)(const void* key)) {
   assert(hashFunction != NULL);
   hashTable->hashFunction = hashFunction;
 }
 
-void ht_rehash(HashTable * hashTable, long numOfBuckets) {
+void ht_rehash(HashTable* hashTable, long numOfBuckets) {
   KeyValuePair** newBucketArray;
   int i;
 
@@ -758,7 +758,7 @@ void ht_rehash(HashTable * hashTable, long numOfBuckets) {
   hashTable->numOfBuckets = numOfBuckets;
 }
 
-void ht_set_ideal_ratio(HashTable * hashTable, float idealRatio,
+void ht_set_ideal_ratio(HashTable* hashTable, float idealRatio,
                         float lowerRehashThreshold,
                         float upperRehashThreshold) {
   assert(idealRatio > 0.0);
@@ -770,9 +770,9 @@ void ht_set_ideal_ratio(HashTable * hashTable, float idealRatio,
   hashTable->upperRehashThreshold = upperRehashThreshold;
 }
 
-void ht_set_deallocation_functions(HashTable * hashTable,
+void ht_set_deallocation_functions(HashTable* hashTable,
                                    void (*keyDeallocator)(void* key),
-                                   void(*valueDeallocator)(void* value)) {
+                                   void (*valueDeallocator)(void* value)) {
   hashTable->keyDeallocator = keyDeallocator;
   hashTable->valueDeallocator = valueDeallocator;
 }

@@ -17,7 +17,7 @@
 uint32_t hash(const char* content);
 
 // use a length parameter to determine the length of the buffer
-uint32_t hashn(const uint8_t * content, size_t length);
+uint32_t hashn(const uint8_t* content, size_t length);
 
 #ifdef CRC32_IMPLEMENTATION
 
@@ -27,7 +27,7 @@ uint32_t hash(const char* content) {
   return hashn(content, length);
 }
 
-uint32_t hashn(const uint8_t * content, size_t length) {
+uint32_t hashn(const uint8_t* content, size_t length) {
   int j;
   unsigned int crc, mask;
 

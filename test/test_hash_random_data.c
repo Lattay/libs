@@ -32,7 +32,6 @@
 #include "../rng/xoshiro256starstar.h"
 #endif
 
-
 #if USE_HASH == ADLER_32
 #define ADLER_32_IMPLEMENTATION
 #include "../hash/adler_32.h"
@@ -60,32 +59,31 @@
 const int N = 10000;
 const int M = DATA_LENGTH;
 
-uint8_t crand(){
+uint8_t crand() {
   return (next() >> 24);
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
   FILE* f = fopen("/dev/random", "r");
   char s[seed_length];
   fread(s, 1, seed_length, f);
   fclose(f);
-  seed((uint64_t*) s);
+  seed((uint64_t *) s);
 
-  char data[M+1];
-  char repr[2*M+1];
+  char data[M + 1];
+  char repr[2* M + 1];
 
-  for(int i = 0; i < N; i++){
-    for(int j = 0; j < M; j++){
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < M; j++) {
       unsigned char c = crand();
       data[j] = c;
-      repr[2*j] = 'a' + (c & 0xF);
-      repr[2*j+1] = 'a' + ((c >> 4) & 0xF);
+      repr[2 * j] = 'a' + (c & 0xF);
+      repr[2 * j + 1] = 'a' + ((c >> 4) & 0xF);
     }
     data[M] = 0;
-    repr[2*M] = 0;
+    repr[2 * M] = 0;
     printf("%s %X\n", repr, hash(data));
   }
   return 0;
 }
-

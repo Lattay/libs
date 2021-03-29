@@ -19,20 +19,20 @@
 typedef struct chan_state chan_state;
 
 chan_state* chan_new_state(size_t max_nodes);
-chan_state* chan_share_state(chan_state * s);
-void chan_free(chan_state * s);
+chan_state* chan_share_state(chan_state* s);
+void chan_free(chan_state* s);
 
 /* Push a piece of data onto the channel if
  * there is free space and return true.
  * If there is no space, return false
  */
-bool chan_push(chan_state * s, void* data);
+bool chan_push(chan_state* s, void* data);
 
 /* If there is data on the channel, pop a piece of data,
  * have data point to it and return true.
  * If there is nothing, return false
  */
-bool chan_pop(chan_state * s, void** data);
+bool chan_pop(chan_state* s, void** data);
 
 #endif
 #ifdef CHAN_IMPL
@@ -49,7 +49,7 @@ typedef struct chan_state {
   chan_area* area;
 } chan_state;
 
-static inline bool free_space(chan_area * area) {
+static inline bool free_space(chan_area* area) {
   size_t t = area->tail;
   size_t h = area->head;
 
@@ -62,11 +62,11 @@ static inline bool free_space(chan_area * area) {
   return t - h < area->max_nodes;
 }
 
-static inline bool ready(chan_area * area) {
+static inline bool ready(chan_area* area) {
   return area->tail != area->head;
 }
 
-bool chan_pop(chan_state * s, void** data) {
+bool chan_pop(chan_state* s, void** data) {
   size_t c = s->area->head;
   size_t head = (c + 1) % s->area->max_nodes;
   if (ready(s->area)) {
@@ -78,7 +78,7 @@ bool chan_pop(chan_state * s, void** data) {
   return true;
 }
 
-bool chan_push(chan_state * s, void* data) {
+bool chan_push(chan_state* s, void* data) {
   size_t c = s->area->tail;
   size_t tail = (c + 1) % s->area->max_nodes;
   if (free_space(s->area)) {
@@ -106,14 +106,14 @@ chan_state* chan_new_state(size_t max_nodes) {
   return s;
 }
 
-chan_state* chan_share_state(chan_state * s) {
+chan_state* chan_share_state(chan_state* s) {
   ++s->area;
   chan_state* s2 = malloc(sizeof(struct chan_state));
   s2->area = s->area;
   return s2;
 }
 
-void chan_free(chan_state * s) {
+void chan_free(chan_state* s) {
   if (!--s->area->ref_count) {
     free(s->area);
   }

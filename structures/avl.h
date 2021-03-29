@@ -69,7 +69,7 @@ typedef struct {
  *      destructor  - a avl_key_destructor_f function pointer (void* -> void) to
  *                    destroy keys
 \*--------------------------------------------------------------------------*/
-void avl_initialize(AvlTree * tree,
+void avl_initialize(AvlTree* tree,
                     avl_comparator_f comparator,
                     avl_key_destructor_f destructor);
 
@@ -85,7 +85,7 @@ void avl_initialize(AvlTree * tree,
  *                    Use NULL when you don't want the data to be freed.
  *                    The tree will be freed anyway.
 \*--------------------------------------------------------------------------*/
-void avl_destroy(AvlTree * tree, avl_node_visitor_f visitor);
+void avl_destroy(AvlTree* tree, avl_node_visitor_f visitor);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -96,7 +96,7 @@ void avl_destroy(AvlTree * tree, avl_node_visitor_f visitor);
  *  EFFICIENCY:
  *      O(log(n))
 \*--------------------------------------------------------------------------*/
-void* avl_search(AvlTree * tree, const void* key);
+void* avl_search(AvlTree* tree, const void* key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -110,7 +110,7 @@ void* avl_search(AvlTree * tree, const void* key);
  *  EFFICIENCY:
  *      O(log(n))
 \*--------------------------------------------------------------------------*/
-void* avl_insert(AvlTree * tree, void* key, void* data);
+void* avl_insert(AvlTree* tree, void* key, void* data);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -122,7 +122,7 @@ void* avl_insert(AvlTree * tree, void* key, void* data);
  *  EFFICIENCY:
  *      O(log(n))
 \*--------------------------------------------------------------------------*/
-void* avl_remove(AvlTree * tree, const void* key);
+void* avl_remove(AvlTree* tree, const void* key);
 
 /*--------------------------------------------------------------------------*\
  *  NAME:
@@ -130,7 +130,7 @@ void* avl_remove(AvlTree * tree, const void* key);
  *  EFFICIENCY:
  *      O(1)
 \*--------------------------------------------------------------------------*/
-int avl_tree_depth(AvlTree * tree);
+int avl_tree_depth(AvlTree* tree);
 
 /*
  * The following are basic avl_comparator_f that can be used when initializing the tree
@@ -153,30 +153,30 @@ void avl_free_data(const void* key, void* data);
 #endif
 
 /* recursive destruction helper */
-static void avl_destroy_helper(AvlTree * tree,
-                               AvlTreeNode * node, avl_node_visitor_f visitor);
+static void avl_destroy_helper(AvlTree* tree,
+                               AvlTreeNode* node, avl_node_visitor_f visitor);
 /* recursive insertion helper */
-static void* avl_insert_helper(AvlTree * tree,
-                               AvlTreeNode ** node, void* key, void* data);
+static void* avl_insert_helper(AvlTree* tree,
+                               AvlTreeNode** node, void* key, void* data);
 /* recursive removal helper, finds the appropriate node to remove */
-static void* avl_remove_helper(AvlTree * tree,
-                               AvlTreeNode ** node, const void* key);
+static void* avl_remove_helper(AvlTree* tree,
+                               AvlTreeNode** node, const void* key);
 /* recursive removal helper, updates tree depths after node swap */
-static void avl_remove_depth_helper(AvlTreeNode * ptr);
+static void avl_remove_depth_helper(AvlTreeNode* ptr);
 
 #define AVL_LEFT 0
 #define AVL_RIGHT 1
 /* rotates a node and its left/right child as appropriate (left=0, right=1) */
-static void avl_rotate(AvlTreeNode ** ptr, int which);
+static void avl_rotate(AvlTreeNode** ptr, int which);
 
 /* performs rotations to appropriately rebalance a node and its children */
-static void avl_rebalance(AvlTreeNode ** ptr);
+static void avl_rebalance(AvlTreeNode** ptr);
 /* calculates how out-of-balance a node is (>0 if left deeper) */
-static int avl_balance_factor(AvlTreeNode * ptr);
+static int avl_balance_factor(AvlTreeNode* ptr);
 /* recalculates the depth of a node */
-static void avl_update_depth(AvlTreeNode * ptr);
+static void avl_update_depth(AvlTreeNode* ptr);
 
-void avl_initialize(AvlTree * tree, avl_comparator_f comparator,
+void avl_initialize(AvlTree* tree, avl_comparator_f comparator,
                     avl_key_destructor_f destructor) {
 
   tree->comparator = comparator;
@@ -184,12 +184,12 @@ void avl_initialize(AvlTree * tree, avl_comparator_f comparator,
   tree->root = NULL;
 }
 
-void avl_destroy(AvlTree * tree, avl_node_visitor_f visitor) {
+void avl_destroy(AvlTree* tree, avl_node_visitor_f visitor) {
   avl_destroy_helper(tree, tree->root, visitor);
 }
 
-static void avl_destroy_helper(AvlTree * tree,
-                               AvlTreeNode * node, avl_node_visitor_f visitor) {
+static void avl_destroy_helper(AvlTree* tree,
+                               AvlTreeNode* node, avl_node_visitor_f visitor) {
 
   if (node == NULL) {
     return;
@@ -205,7 +205,7 @@ static void avl_destroy_helper(AvlTree * tree,
   AVL_FREE(node);
 }
 
-void* avl_search(AvlTree * tree, const void* key) {
+void* avl_search(AvlTree* tree, const void* key) {
   AvlTreeNode* node = tree->root;
   int cmp;
   while (node) {
@@ -221,12 +221,12 @@ void* avl_search(AvlTree * tree, const void* key) {
   return NULL;
 }
 
-void* avl_insert(AvlTree * tree, void* key, void* data) {
+void* avl_insert(AvlTree* tree, void* key, void* data) {
   return avl_insert_helper(tree, &tree->root, key, data);
 }
 
-static void* avl_insert_helper(AvlTree * tree,
-                               AvlTreeNode ** node, void* key, void* data) {
+static void* avl_insert_helper(AvlTree* tree,
+                               AvlTreeNode** node, void* key, void* data) {
 
   int cmp;
   void* ret;
@@ -270,12 +270,12 @@ static void* avl_insert_helper(AvlTree * tree,
   return ret;
 }
 
-void* avl_remove(AvlTree * tree, const void* key) {
+void* avl_remove(AvlTree* tree, const void* key) {
   return avl_remove_helper(tree, &tree->root, key);
 }
 
-static void* avl_remove_helper(AvlTree * tree,
-                               AvlTreeNode ** node, const void* key) {
+static void* avl_remove_helper(AvlTree* tree,
+                               AvlTreeNode** node, const void* key) {
 
   int cmp;
   void* ret;
@@ -345,14 +345,14 @@ static void* avl_remove_helper(AvlTree * tree,
   return ret;
 }
 
-static void avl_remove_depth_helper(AvlTreeNode * ptr) {
+static void avl_remove_depth_helper(AvlTreeNode* ptr) {
   if (ptr) {
     avl_remove_depth_helper(ptr->right);
     avl_update_depth(ptr);
   }
 }
 
-static void avl_rebalance(AvlTreeNode ** node) {
+static void avl_rebalance(AvlTreeNode** node) {
   int delta = avl_balance_factor(*node);
 
   /* two rotation directions */
@@ -369,7 +369,7 @@ static void avl_rebalance(AvlTreeNode ** node) {
   }
 }
 
-static void avl_rotate(AvlTreeNode ** node, int dir) {
+static void avl_rotate(AvlTreeNode** node, int dir) {
   AvlTreeNode* ch;
 
   /* standard tree rotations */
@@ -391,7 +391,7 @@ static void avl_rotate(AvlTreeNode ** node, int dir) {
   avl_update_depth(*node);
 }
 
-static int avl_balance_factor(AvlTreeNode * ptr) {
+static int avl_balance_factor(AvlTreeNode* ptr) {
   int delta = 0;
   if (ptr->left) {
     delta = ptr->left->depth;
@@ -402,7 +402,7 @@ static int avl_balance_factor(AvlTreeNode * ptr) {
   return delta;
 }
 
-static void avl_update_depth(AvlTreeNode * ptr) {
+static void avl_update_depth(AvlTreeNode* ptr) {
   ptr->depth = 1;
   if (ptr->left) {
     ptr->depth = ptr->left->depth;
@@ -413,7 +413,7 @@ static void avl_update_depth(AvlTreeNode * ptr) {
   ptr->depth++;
 }
 
-int avl_tree_depth(AvlTree * tree) {
+int avl_tree_depth(AvlTree* tree) {
   if (tree->root) {
     return tree->root->depth;
   }

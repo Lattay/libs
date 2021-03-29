@@ -23,7 +23,7 @@
 uint32_t hash(const char* content);
 
 // use a length parameter to determine the length of the buffer
-uint32_t hashn(const uint8_t * content, size_t length);
+uint32_t hashn(const uint8_t* content, size_t length);
 
 #ifdef LCH32_IMPLEMENTATION
 
@@ -39,7 +39,7 @@ uint32_t hash(const char* content) {
   return hashn(content, length);
 }
 
-uint32_t hashn(const uint8_t * content, size_t length) {
+uint32_t hashn(const uint8_t* content, size_t length) {
   uint32_t buf[3] = { 0x51b73064, 0x9f4a5705, 0x7b049943 };
   uint32_t digest = 0x698a3c57;
 

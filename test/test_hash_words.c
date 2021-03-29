@@ -32,16 +32,15 @@
 
 const int M = 128;
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
   char* line = NULL;
   size_t len = 0;
   int read;
 
-  while((read = getline(&line, &len, stdin)) != -1){
-    line[read-1] = 0;
+  while ((read = getline(&line, &len, stdin)) != -1) {
+    line[read - 1] = 0;
     printf("%s %X\n", line, hash(line));
   }
   free(line);
   return 0;
 }
-

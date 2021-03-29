@@ -18,7 +18,7 @@
 uint32_t hash(const char* content);
 
 // use a length parameter to determine the length of the buffer
-uint32_t hashn(const uint8_t * content, size_t length);
+uint32_t hashn(const uint8_t* content, size_t length);
 
 #ifdef ADLER_32X_IMPLEMENTATION
 
@@ -33,7 +33,7 @@ uint32_t hash(const char* content) {
   return (b << 16) | a;
 }
 
-uint32_t hashn(const uint8_t * content, size_t length) {
+uint32_t hashn(const uint8_t* content, size_t length) {
   uint16_t a = 1 << 9, b = 0;
   for (int i = 0; i < length; i++) {
     a = ((a << 7) + (a >> 9) + content[i]) % ADLER_MOD;

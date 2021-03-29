@@ -28,42 +28,41 @@ const int N = 10000;
 const int N2 = 20000;
 const double pi = 3.14159265359;
 
-double frand(){
-  return (next() >> 11) * (2.0/(1L << 53)) - 1.0;
+double frand() {
+  return (next() >> 11) * (2.0 / (1L << 53)) - 1.0;
 }
 
-void naive_dft(double* signal, double* spectrum){
-  for(int i = 0; i < N; i++){
-    spectrum[2*i] = 0.0;
-    spectrum[2*i+1] = 0.0;
-    for(int j = 0; j < N; j++){
-      spectrum[2*i] += signal[j] * cos(2*pi/N * i * j);
-      spectrum[2*i+1] += signal[j] * sin(2*pi/N * i * j);
+void naive_dft(double* signal, double* spectrum) {
+  for (int i = 0; i < N; i++) {
+    spectrum[2 * i] = 0.0;
+    spectrum[2 * i + 1] = 0.0;
+    for (int j = 0; j < N; j++) {
+      spectrum[2 * i] += signal[j] * cos(2 * pi / N * i * j);
+      spectrum[2 * i + 1] += signal[j] * sin(2 * pi / N * i * j);
     }
   }
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
   FILE* f = fopen("/dev/random", "r");
   char s[seed_length];
   fread(s, 1, seed_length, f);
   fclose(f);
-  seed((uint64_t*) s);
+  seed((uint64_t *) s);
 
   double data[N], spectrum[N2];
 
-  for(int i = 0; i < N; i++){
+  for (int i = 0; i < N; i++) {
     data[i] = frand();
   }
 
   naive_dft(data, spectrum);
 
   printf("%d\n", N);
-  for(int i = 0; i < N; i++){
-    printf("%lf %lf\n", spectrum[2*i], spectrum[2*i+1]);
+  for (int i = 0; i < N; i++) {
+    printf("%lf %lf\n", spectrum[2 * i], spectrum[2 * i + 1]);
   }
 
   return 0;
 }
-

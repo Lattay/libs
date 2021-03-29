@@ -5,23 +5,22 @@
 
 const int N = 10000;
 
-double frand(){
-  return (next() >> 11) * (1.0/(1L << 53));
+double frand() {
+  return (next() >> 11) * (1.0 / (1L << 53));
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 
   FILE* f = fopen("/dev/random", "r");
   char s[seed_length];
   fread(s, 1, seed_length, f);
   fclose(f);
-  seed((uint64_t*) s);
+  seed((uint64_t *) s);
 
   printf("%d\n", N);
-  for(int i = 0; i < N; i++){
+  for (int i = 0; i < N; i++) {
     printf("%lf %lf\n", frand(), frand());
   }
 
   return 0;
 }
-

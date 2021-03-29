@@ -39,12 +39,12 @@ const char test_str6[8] = "a#'po46";
 const char test_str7[8] = "a3'po45";
 const char test_str8[8] = "a#'`o45";
 
-void test_string(const char* str, size_t n){
-  printf("hashing %X, %s\n", hashn((uint8_t*)str, n), str);
+void test_string(const char* str, size_t n) {
+  printf("hashing %X, %s\n", hashn((uint8_t *) str, n), str);
   // printf("hash: %X\n", hash((uint8_t*)str));
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
   test_string(test_str1, 49);
   test_string(test_str2, 49);
   test_string(test_str3, 49);
@@ -57,4 +57,3 @@ int main(int argc, char** argv){
   test_string(test_str8, 7);
   return 0;
 }
-

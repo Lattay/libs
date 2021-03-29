@@ -33,21 +33,21 @@ typedef struct {
   StkElem* head;
 } Stack;
 
-void stk_push(Stack *, void* data);
-void* stk_pop(Stack *);
-bool stk_empty(Stack *);
+void stk_push(Stack* , void* data);
+void* stk_pop(Stack* );
+bool stk_empty(Stack* );
 
 #endif
 
 #ifdef STK_IMPLEMENTATION
-void stk_push(Stack * stack, void* data) {
+void stk_push(Stack* stack, void* data) {
   StkElem* elem = STK_ALLOC(StkElem);
   elem->data = data;
   elem->next = stack->head;
   stack->head = elem;
 }
 
-void* stk_pop(Stack * stack) {
+void* stk_pop(Stack* stack) {
   if (!stack->head) {
     return NULL;
   }
@@ -58,7 +58,7 @@ void* stk_pop(Stack * stack) {
   return data;
 }
 
-bool stk_empty(Stack * stack) {
+bool stk_empty(Stack* stack) {
   return !stack->head;
 }
 
